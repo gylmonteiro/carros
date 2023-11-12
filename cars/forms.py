@@ -43,9 +43,13 @@ class BrandFormModel(forms.ModelForm):
         model = Brand
         fields = '__all__'
 
+    '''
+    Validação no campo name para verificar se o nome
+    da marca já existe dentro do bd.
+    '''
     def clean_name(self):
         name = self.cleaned_data.get('name')
         result_query = Brand.objects.filter(name__icontains=name)
         if result_query:
-            self.add_error('name', 'Este campo já existe')
+            self.add_error('name', 'Esta marca já tem cadastro')
         return name
