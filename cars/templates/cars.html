@@ -101,13 +101,14 @@
   <div class="car-grid">
     {% if cars %}
       {% for car in cars %}
-        <div class="car-card">
+        <a href="{% url 'carDetail' car.pk %}"><div class="car-card">
           {% if car.photo %}
             <img src="{{ car.photo.url }}" alt="{{ car.model }} - {{ car.brand }}">
           {%endif%}
           <h2>{{ car.brand }} {{ car.model }}</h2>
           <p>{{ car.factory_year }} - R$ {{ car.value }}</p>
         </div>
+        </a>
       {% endfor %}
     {% else %}
       <p class="no-results">Nenhum carro encontrado.</p>
