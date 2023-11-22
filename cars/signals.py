@@ -12,8 +12,9 @@ def car_pre_save(sender, instance, **kwargs):
 
 @receiver(post_save, sender=Car)
 def car_pre_save(sender, instance, **kwargs):
-    phone = '55_84998181036'
-    message = 'Cadastrei um carro'
+    phone = '55_84999685922'
+    name_car = instance.model
+    message = f'Esse é um teste com o cadatro do carro {name_car}'
     time.sleep(4)
     web.open(f'https://web.whatsapp.com/send?phone={phone}&text={message}')
     time.sleep(6)
