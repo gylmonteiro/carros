@@ -1,6 +1,7 @@
+from django.db.models import Sum
 from django.db.models.signals import pre_save, pre_delete, post_save, post_delete
 from django.dispatch import receiver
-from cars.models import Car
+from cars.models import Car, CarInvetory
 
 # import pywhatkit as wa (não vai ser necessário no momento. Somente testes)
 
@@ -12,10 +13,23 @@ from cars.models import Car
 # import pandas as pd
 '''
 
+def car_invetory_update():
+    cars_count = Car.objects.all().count()
+    cars_value = Car.objects.aggregate(
+        all_value=Sum('value')
+    )['all_value']
+    CarInvetory.objects.create(cars_count=cars_count, cars_value=cars_value)
+@receiver(post_save, sender=Car)
+def car_post_save(sender, instance, **kwargs):
+    car_invetory_update()
+
+@receiver(post_delete, sender=Car)
+def car_delete_save(sender, instance, **kwargs):
+    car_invetory_update()
 @receiver(pre_save, sender=Car)
 def car_pre_save(sender, instance, **kwargs):
-    print("entrei no pré-save")
-    print(instance)
+    if not instance.bio:
+        instance.bio = "Biografia gerada por IA"
 
 '''
 # método com signails para enviar mensagem via whatsapp
@@ -49,4 +63,3 @@ def car_post_save(sender, instance, **kwargs):
     wa.sendwhatmsg_instantly(phone, message, tab_close=True, wait_time=20, close_time=5)
     # return instance
 '''
-
